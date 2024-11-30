@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Found Items Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        input, select, textarea { margin-bottom: 10px; padding: 5px; }
+        button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Add Found Item</h1>
+    <form id="foundItemForm">
+        <label>Item Name:</label>
+        <input type="text" id="itemName" required>
+
+        <label>Description:</label>
+        <textarea id="description"></textarea>
+
+        <label>Category:</label>
+        <select id="category">
+            <option value="">Select Category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Books">Books</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Found Location:</label>
+        <input type="text" id="location" required>
+
+        <label>Found Date:</label>
+        <input type="date" id="foundDate" required>
+
+        <label>Image URL:</label>
+        <input type="url" id="imageUrl">
+
+        <button type="submit">Submit Found Item</button>
+    </form>
+
+    <script>
+        document.getElementById('foundItemForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const itemName = document.getElementById('itemName').value;
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const location = document.getElementById('location').value;
+            const foundDate = document.getElementById('foundDate').value;
+            const imageUrl = document.getElementById('imageUrl').value;
+    
+            try {XMLDocument
+                const response = await fetch('/api/add-item', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        itemName,
+                        description,
+                        category,
+                        location,
+                        foundDate,
+                        imageUrl,
+                    }),
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    alert('Item successfully added!');
+                    e.target.reset(); // Reset the form
+                } else {
+                    throw new Error(data.error || 'Failed to add item');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to add item');
+            }
+        });
+    </script>
+</body>
+</html>
